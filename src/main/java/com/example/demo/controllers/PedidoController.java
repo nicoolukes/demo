@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTOs.APIResponse;
-import com.example.demo.entitys.Pedido;
+import com.example.demo.DTOs.PedidoDTO;
 import com.example.demo.services.PedidoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,14 +37,14 @@ public class PedidoController {
     })
 
     @GetMapping
-    public ResponseEntity<APIResponse<List<Pedido>>> buscarPedidos(@RequestParam(required = false) Integer clienteId,
+    public ResponseEntity<APIResponse<List<PedidoDTO>>> buscarPedidos(@RequestParam(required = false) Integer clienteId,
                                                             @RequestParam(required = false) String categoria,
                                                             @RequestParam(required = false) LocalDate fechaDesde,
                                                             @RequestParam(required = false) LocalDate fechaHasta,
                                                             @RequestParam(required = false) String estado 
         ){
         
-        List<Pedido> pedidos = pedidoService.buscarPedidos(clienteId, categoria, fechaDesde, fechaHasta, estado);
+        List<PedidoDTO> pedidos = pedidoService.buscarPedidos(clienteId, categoria, fechaDesde, fechaHasta, estado);
         
         return ResponseEntity.ok(new APIResponse<>(HttpStatus.OK.value(), "Listado de pedidos", pedidos));
     }

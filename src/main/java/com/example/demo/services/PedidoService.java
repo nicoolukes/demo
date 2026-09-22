@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entitys.Pedido;
-import com.example.demo.entitys.DetallePedido;
-import com.example.demo.interfaces.IPedidoRepository;
-import com.example.demo.DTOs.ProductoPedidoDTO;
 import com.example.demo.DTOs.PedidoDTO;
+import com.example.demo.DTOs.ProductoPedidoDTO;
+import com.example.demo.entitys.DetallePedido;
+import com.example.demo.entitys.Pedido;
+import com.example.demo.interfaces.IPedidoRepository;
 
 @Service
 public class PedidoService {
@@ -20,12 +20,19 @@ public class PedidoService {
         this.pedidoRepository = pedidoRepository;
     }
 
-    public List<ProductoPedidoDTO> buscarPedidos(Integer clienteId, String categoria, LocalDate fechaDesde, LocalDate fechaHasta, String estado){
+    public List<PedidoDTO> buscarPedidos(Integer clienteId, String categoria, LocalDate fechaDesde, LocalDate fechaHasta, String estado){
         
         List<Integer> ids = pedidoRepository.buscarPedidoIds(clienteId, categoria, fechaDesde, fechaHasta, estado);
-        List<Pedido> pedidoCompleto = pedidoRepository.buscarPedidoCompleto(ids);
 
-        List<PedidoDTO> pedido = pedidoCompleto.stream().map(p -> convertirPedido(p)).toList();
+        List<Pedido> pedidoCompleto;
+        List<PedidoDTO> pedido ;
+
+        if(ids == null || ids.isEmpty()){
+            pedido = List.of();
+        }else{
+            pedidoCompleto = pedidoRepository.buscarPedidoCompleto(ids);
+            pedido = pedidoCompleto.stream().map(p -> convertirPedido(p)).toList();
+        }
 
         return pedido;
     }
@@ -47,8 +54,6 @@ public class PedidoService {
         dto.setTotalPedido(total);
 
         return dto;
-
-
 
     }
 
